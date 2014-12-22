@@ -53,29 +53,5 @@ function! s:gotoline()
 	endfor
 endfunction
 
-" Handle entry in the argument list.
-" This is called via `:argdo` when entering Vim.
-function! s:handle_arg()
-	let argname = expand('%')
-	let fname = s:gotoline()
-	if fname != argname
-		let argidx = argidx()
-		exec (argidx+1).'argdelete'
-		exec (argidx)'argadd' fname
-	endif
-endfunction
-
-function! s:startup()
-	autocmd! BufNewFile * nested call s:gotoline()
-	autocmd! BufRead * nested call s:gotoline()
-
-	if argc() > 0
-		let argidx=argidx()
-		argdo call s:handle_arg()
-		exec (argidx+1).'argument'
-		" Manually call Syntax autocommands, ignored by `:argdo`.
-		doautocmd Syntax
-	endif
-endfunction
-
-autocmd VimEnter * call s:startup()
+autocmd! BufNewFile * nested call s:gotoline()
+autocmd! BufRead * nested call s:gotoline()
